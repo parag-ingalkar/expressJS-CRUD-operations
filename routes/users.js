@@ -30,7 +30,7 @@ router.get("/",(req,res)=>{
 });
 
 // GET by specific ID request: Retrieve a single user with email ID
-router.get("/:email",(req,res)=>{
+router.get("/email/:email",(req,res)=>{
   // Copy the code here
   const email = req.params.email;
   let user = users.filter((user) => user.email === email);
@@ -38,7 +38,7 @@ router.get("/:email",(req,res)=>{
   res.send(user)//This line is to be replaced with actual return value
 });
 
-router.get("lastName/:lastName",(req,res)=>{
+router.get("/lastName/:lastName",(req,res)=>{
     // Copy the code here
     const lastName = req.params.lastName;
     let user = users.filter((user) => user.lastName === lastName);
@@ -47,15 +47,16 @@ router.get("lastName/:lastName",(req,res)=>{
   });
 
   // Function to convert a date string in the format "dd-mm-yyyy" to a Date object
-function getDateFromString(strDate) {
+  function getDateFromString(strDate) {
     let [dd, mm, yyyy] = strDate.split('-');
-    return new Date(yyyy + "/" + mm + "/" + dd);
+    return new Date(`${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`);
 }
+
 
 // Define a route handler for GET requests to the "/sort" endpoint
 router.get("/sort", (req, res) => {
     // Sort the users array by DOB in ascending order
-    let sorted_users = users.sort(function(a, b) {
+    let sorted_users = [...users].sort(function(a, b) {
         let d1 = getDateFromString(a.DOB);
         let d2 = getDateFromString(b.DOB);
         return d1 - d2;
@@ -63,6 +64,7 @@ router.get("/sort", (req, res) => {
     // Send the sorted_users array as the response to the client
     res.send(sorted_users);
 });
+
 // POST request: Create a new user
 router.post("/",(req,res)=>{
   // Copy the code here
